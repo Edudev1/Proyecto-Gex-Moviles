@@ -1,6 +1,7 @@
 package com.example.gex.repository
 
 import android.app.admin.TargetUser
+import com.example.gex.dto.ProductDto
 import com.example.gex.internet.RetrofitClient
 import com.example.gex.model.LoginRequest
 import com.example.gex.model.LoginResponse
@@ -21,5 +22,8 @@ class TiendaRepository {
             password = password
         )
         return apiService.login(loginRequest)
+    }
+    suspend fun getProducts(): Response<List<ProductDto>> {
+        return apiService.getProducts()
     }
 }

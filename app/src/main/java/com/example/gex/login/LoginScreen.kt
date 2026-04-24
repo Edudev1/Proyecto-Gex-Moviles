@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,12 +16,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun LoginScreen(onLoginCorrecto: (String, String) -> Unit) {
-    var usuario by remember { mutableStateOf("") }
+fun LoginScreen(
+    onLoginCorrecto: (String, String) -> Unit,
+    loginViewModel: LoginViewModel = viewModel()
+) {
+    var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var error by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -30,9 +34,9 @@ fun LoginScreen(onLoginCorrecto: (String, String) -> Unit) {
         Text(text = "Mi tienda")
 
         OutlinedTextField(
-            value = usuario,
-            onValueChange = { usuario = it},
-            label = { Text("Usuario")},
+            value = username,
+            onValueChange = { username = it},
+            label = { Text(text ="Usuario")},
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -45,16 +49,26 @@ fun LoginScreen(onLoginCorrecto: (String, String) -> Unit) {
         )
         Button(
             onClick = {
-                if (usuario.isEmpty() || password.isEmpty()) {
-                    error = "Introduce usuario y contraseña"
-                } else {
-                    onLoginCorrecto("token_de_prueba", usuario)
+                if (username.isNotEmpty() && password.isNotEmpty()) {
+                    loginViewModel.login(
+                        username = username,
+                        password = password,
+                        onLoginCorrecto = onLoginCorrecto
+                    )
                 }
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            enabled = !loginViewModel.cargando
         ) {
             Text(text = "Entrar")
         }
-        Text(text = error)
+
+        if (loginViewModel.cargando) {
+            CircularProgressIndicator()
+        }
+
+        if (loginViewModel.error.isNotEmpty()) {
+            Text(text = loginViewModel.error)
+        }
     }
 }
