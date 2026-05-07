@@ -23,7 +23,7 @@ class TiendaRepository {
         )
         return apiService.login(loginRequest)
     }
-    suspend fun getProducts(): Response<List<ProductDto>> {
-        return apiService.getProducts()
+    suspend fun getProducts(token: String): Response<List<ProductDto>> {
+        return apiService.getProducts("Bearer $token")
     }
 }

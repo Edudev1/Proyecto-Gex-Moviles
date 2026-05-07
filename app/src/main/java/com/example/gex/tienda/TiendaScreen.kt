@@ -1,12 +1,12 @@
 package com.example.gex.tienda
 
-import android.net.wifi.hotspot2.pps.HomeSp
-import android.text.Selection
-import android.util.JsonToken
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -17,14 +17,13 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.node.InteroperableComposeUiNode
+import androidx.compose.ui.unit.dp
 import com.example.gex.carro.CarroScreen
 import com.example.gex.home.HomeScreen
 import com.example.gex.productos.ProductosScreen
@@ -41,18 +40,23 @@ fun TiendaScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            Text(
+                text = usuario
+            )
+
             Button(
                 onClick = onSalirClick
             ) {
                 Text(text = "Salir")
             }
-            Text(
-                text = usuario
-            )
         }
+
         TabRow(
             selectedTabIndex = tabSeleccionado
         ) {
@@ -71,6 +75,7 @@ fun TiendaScreen(
                     )
                 }
             )
+
             Tab(
                 selected = tabSeleccionado == 1,
                 onClick = {
@@ -86,6 +91,7 @@ fun TiendaScreen(
                     )
                 }
             )
+
             Tab(
                 selected = tabSeleccionado == 2,
                 onClick = {
@@ -102,11 +108,15 @@ fun TiendaScreen(
                 }
             )
         }
-        when (tabSeleccionado) {
-            0 -> HomeScreen()
-            1 -> ProductosScreen(token = token)
-            2 -> CarroScreen(token = token)
+
+        Box(
+            modifier = Modifier.weight(1f)
+        ) {
+            when (tabSeleccionado) {
+                0 -> HomeScreen()
+                1 -> ProductosScreen(token = token)
+                2 -> CarroScreen(token = token)
+            }
         }
     }
-
 }

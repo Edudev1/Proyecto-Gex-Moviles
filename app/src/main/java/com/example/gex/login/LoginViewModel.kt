@@ -5,11 +5,9 @@ import androidx.lifecycle.ViewModel
 import com.example.gex.repository.TiendaRepository
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import java.lang.Exception
-import kotlin.math.log
 
 
 class LoginViewModel : ViewModel() {
@@ -49,7 +47,7 @@ class LoginViewModel : ViewModel() {
                         error = "Sin respuesta del server"
                     }
                 } else {
-                    error = "El usuario o contraseña son incorrectos"
+                    error = "Error en login. Código: ${respuesta.code()}"
                 }
             } catch (e: Exception) {
                 error = "No se puede conectar con el server"

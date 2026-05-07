@@ -16,7 +16,6 @@ import com.example.gex.ui.theme.GEXTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             GEXTheme {
                 AppNavegation()
