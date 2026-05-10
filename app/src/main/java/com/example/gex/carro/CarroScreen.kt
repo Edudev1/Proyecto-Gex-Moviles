@@ -5,10 +5,14 @@ import android.util.JsonToken
 import android.widget.Button
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -20,7 +24,7 @@ import com.example.gex.dto.CartItemDto
 
 @Composable
 fun CarroScreen(
-    token: String
+    token: String,
     carroViewModel: CarroViewModel = viewModel()
 ) {
     val yaCargado = remember { mutableStateOf(false) }
@@ -104,8 +108,26 @@ fun CarroScreen(
 }
 
 @Composable
-fun CarroItem(producto: Int, onClick: () -> Unit) {
-    TODO("Not yet implemented")
+fun CarroItem(producto: CartItemDto, onClick: () -> Unit) {
+    Card(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(6.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = producto.productName)
+            Text(text = "Unidades: ${producto.units}")
+            Text(text = "Precio unidad: ${producto.unitPrice} €")
+
+            if (producto.discount > 0) {
+                Text(text = "Descuento: ${producto.totalPrice} €")
+            }
+        }
+    }
 }
 
 

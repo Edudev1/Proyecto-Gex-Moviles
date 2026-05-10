@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -18,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gex.dto.ProductDto
-import com.example.gex.ui.productos.ProductosViewModel
+import androidx.compose.material3.Card
 
 @Composable
 fun ProductosScreen(
@@ -26,6 +28,8 @@ fun ProductosScreen(
     productosViewModel: ProductosViewModel = viewModel()
 ) {
     val yaCargado = remember { mutableStateOf(false) }
+    val productoParaAñadir = remember { mutableStateOf<ProductDto?>(null) }
+    val unidades = remember { mutableStateOf(1) }
 
     if (!yaCargado.value) {
         productosViewModel.cargarProductos(token)
@@ -66,7 +70,8 @@ fun ProductosScreen(
                 ProductoItem(
                     producto = producto,
                     onAddClick = { productoSeleccionado ->
-                        productosViewModel.productoSeleccionado = productoSeleccionado
+                        productoParaAñadir.value = productoSeleccionado
+                        unidades.value = 1
                     }
                 )
             }
@@ -96,6 +101,64 @@ fun ProductosScreen(
                 Text(text = "Siguiente")
             }
         }
+    }
+    if (productoParaAñadir.value != null){
+        AlertDialog(
+            onDismissRequest = {
+                productoParaAñadir.value = null
+            },
+            title = {
+                Text(text = "Añadir al carrito")
+            },
+            text = {
+                Column {
+                    Text(text = productoParaAñadir.value!!.productName)
+                    Text(text = "Unidades: ${unidades.value}")
+
+                    Row {
+                        Button(
+                            onClick = {
+                                if (unidades.value > 1) {
+                                    unidades.value--
+                                }
+                            }
+                        ) {
+                            Text(text = "-")
+                        }
+                        Button(
+                            onClick = {
+                                unidades.value++
+                            }
+                        ) {
+                            Text(text = "+")
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        productosViewModel.añadirProductoAlCarro(
+                            token = token,
+                            productId = productoParaAñadir.value!!.productId.toLong(),
+                            units = unidades.value
+                        )
+                        productoParaAñadir.value = null
+                    }
+                ) {
+                    Text(text = "Añadir")
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = {
+                        productoParaAñadir.value = null
+                    }
+                ) {
+                    Text(text = "Cancelar")
+                }
+            }
+        )
     }
 }
 
@@ -127,10 +190,11 @@ fun ProductoItem(
     producto: ProductDto,
     onAddClick: (ProductDto) -> Unit
 ) {
-    Column(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(8.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Text(text = producto.productName)
         Text(text = producto.productDescription)

@@ -8,11 +8,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -50,10 +52,13 @@ fun TiendaScreen(
                 text = usuario
             )
 
-            Button(
+            IconButton(
                 onClick = onSalirClick
             ) {
-                Text(text = "Salir")
+                Icon(
+                    imageVector = Icons.Default.ExitToApp,
+                    contentDescription = "Salir"
+                )
             }
         }
 

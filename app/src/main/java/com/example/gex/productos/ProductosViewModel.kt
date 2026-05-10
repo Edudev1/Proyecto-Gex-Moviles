@@ -1,4 +1,4 @@
-package com.example.gex.ui.productos
+package com.example.gex.productos
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gex.dto.ProductDto
 import com.example.gex.repository.TiendaRepository
-import com.google.gson.stream.JsonToken
 import kotlinx.coroutines.launch
 
 class ProductosViewModel : ViewModel() {
@@ -27,6 +26,10 @@ class ProductosViewModel : ViewModel() {
 
     var paginaActual by mutableStateOf(1)
     val productosPorPagina = 5
+
+    var mensajeCarrito by mutableStateOf("")
+    var errorCarrito by mutableStateOf("")
+    var cargandoCarrito by mutableStateOf(false)
 
     fun cargarProductos(token: String) {
         cargando = true
@@ -145,4 +148,47 @@ class ProductosViewModel : ViewModel() {
 
         return total
     }
+
+    fun añadirProductoAlCarro(
+        token: String,
+        productId: Long,
+        units: Int
+    ) {
+        cargandoCarrito = true
+        mensajeCarrito = ""
+        errorCarrito = ""
+
+        viewModelScope.launch {
+            try {
+                val respuesta = repository.addProductToCart(
+                    token = token,
+                    productId = productId,
+                    units = units
+                )
+
+                if (respuesta.isSuccessful) {
+                    mensajeCarrito = "Producto añadido al carrito"
+                } else {
+                    errorCarrito = "Error al añadir al carro"
+                }
+            } catch (e: Exception) {
+                errorCarrito = "No se ha podido añadir al carrito"
+            }
+            cargandoCarrito = false
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
