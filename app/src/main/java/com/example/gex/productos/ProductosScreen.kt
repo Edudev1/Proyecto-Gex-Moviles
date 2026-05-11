@@ -177,7 +177,7 @@ fun CategoriasView(
                 modifier = Modifier.padding(4.dp)
             ) {
                 if (categoria == categoriaSeleccionada) {
-                    Text(text = "$categoria ✅")
+                    Text(text = "$categoria X")
                 } else {
                     Text(text = categoria)
                 }
